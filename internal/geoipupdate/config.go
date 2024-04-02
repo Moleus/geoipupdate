@@ -55,6 +55,8 @@ type Config struct {
 	Verbose bool
 	// Output turns on sending the download/update result to stdout as JSON.
 	Output bool
+	// S3Bucket is the name of the S3 bucket to write to.
+	S3Bucket string
 }
 
 // Option is a function type that modifies a configuration object.
@@ -371,6 +373,10 @@ func setConfigFromEnv(config *Config) error {
 
 	if value, ok := os.LookupEnv("GEOIPUPDATE_VERBOSE"); ok {
 		config.Verbose = value != ""
+	}
+
+	if value, ok := os.LookupEnv("GEOIPUPDATE_S3_BUCKET"); ok {
+		config.S3Bucket = value
 	}
 
 	return nil

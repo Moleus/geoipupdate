@@ -117,7 +117,6 @@ func (w *LocalFileWriter) Write(
 // GetHash returns the hash of the current database file.
 func (w *LocalFileWriter) GetHash(editionID string) (string, error) {
 	databaseFilePath := w.getFilePath(editionID)
-	//nolint:gosec // we really need to read this file.
 	database, err := os.Open(databaseFilePath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -163,7 +162,6 @@ type fileWriter struct {
 // newFileWriter initializes a new fileWriter struct.
 func newFileWriter(path string) (*fileWriter, error) {
 	// prepare temp file for initial writing.
-	//nolint:gosec // we really need to read this file.
 	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
 		return nil, fmt.Errorf("creating temporary file at %s: %w", path, err)

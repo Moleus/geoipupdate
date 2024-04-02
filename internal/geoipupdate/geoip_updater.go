@@ -6,6 +6,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	awsConfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"log"
 	"net/http"
 	"os"
@@ -51,11 +53,11 @@ func NewUpdater(config *Config) (*Updater, error) {
 		return nil, err
 	}
 
-	writer, err := database.NewLocalFileWriter(
-		config.DatabaseDirectory,
-		config.PreserveFileTimes,
-		config.Verbose,
-	)
+	awsCfg, err := awsConfig.LoadDefaultConfig(context.Background())
+
+	s3Client := s3.NewFromConfig(awsCfg)
+
+	writer, err := database.NewS3DatabaseWriter(s3Client, config.S3Bucket, config.Verbose)
 	if err != nil {
 		return nil, err
 	}
